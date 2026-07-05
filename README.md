@@ -7,14 +7,6 @@ A full-stack E-Commerce platform built using **HTML, CSS, JavaScript, Node.js, E
 
 ---
 
-## 📸 Preview
-
-![E-Commerce Website](./assets/homepage.png)
-
-> Add a screenshot of your homepage inside an `assets` folder and name it `homepage.png`.
-
----
-
 ## 🚀 Features
 
 ### 👤 User Features
