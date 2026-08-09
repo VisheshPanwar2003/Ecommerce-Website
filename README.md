@@ -1,58 +1,60 @@
 # 🛒 E-Commerce Website
 
-A full-stack E-Commerce platform built using **HTML, CSS, JavaScript, Node.js, Express.js, MongoDB, and JWT Authentication**. The application provides separate user and seller modules, allowing customers to browse and purchase products while sellers can manage inventory and products efficiently.
+A responsive **static E-Commerce website** built using **HTML5, CSS3, and JavaScript**. The project provides a clean and user-friendly shopping experience where users can browse products, search for items, filter products by category, view product details, and manage their shopping cart.
 
-🌐 **Live Demo:** https://ecommerce.visheshpanwar.me/  
-📂 **GitHub Repository:** https://github.com/VisheshPanwar2003/Ecommerce-Website
+🌐 **Live Demo:** ecommerce.visheshpanwar.me
+📂 **GitHub Repository:** github.com/VisheshPanwar2003/Ecommerce-Website
 
 ---
 
 ## 🚀 Features
 
 ### 👤 User Features
-- User Registration & Login
-- JWT Authentication
-- Browse Products by Categories
-- Product Search Functionality
-- Product Details Page
-- Add to Cart
-- Responsive User Interface
-- Secure User Sessions
 
-### 🛍️ Seller Features
-- Seller Authentication
-- Seller Dashboard
-- Add New Products
-- Update Existing Products
-- Delete Products
-- Inventory Management
-- Manage Product Listings
+* Browse products
+* Browse products by categories
+* Product search functionality
+* Product details view
+* Add products to cart
+* Remove products from cart
+* Update cart quantities
+* Dynamic cart total calculation
+* Responsive design
+* Interactive user interface
 
-### 🔒 Security Features
-- JWT-based Authentication
-- Role-Based Access Control
-- Protected Routes
-- Secure Database Operations
+### 🛍️ Shopping Features
+
+* Product cards with images, names, prices, and categories
+* Category-based product filtering
+* Real-time product search
+* Shopping cart functionality
+* Dynamic product and cart rendering
+* Client-side cart management
+* Checkout interface
+
+### 📱 Responsive Design
+
+* Mobile-friendly layout
+* Tablet-friendly interface
+* Desktop-optimized design
+* Responsive navigation
+* Flexible product grid
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### Frontend
-- HTML5
-- CSS3
-- JavaScript (ES6)
 
-### Backend
-- Node.js
-- Express.js
+* **HTML5** — Website structure and content
+* **CSS3** — Styling, layouts, animations, and responsive design
+* **JavaScript (ES6)** — Product rendering, search, filtering, cart functionality, and DOM manipulation
 
-### Database
-- MongoDB
-- Mongoose
+### Storage
 
-### Authentication
-- JSON Web Token (JWT)
+* **LocalStorage** — Used for maintaining cart data on the client side
+
+> This is a **frontend-only static website** and does not use a backend server or database.
 
 ---
 
@@ -61,22 +63,16 @@ A full-stack E-Commerce platform built using **HTML, CSS, JavaScript, Node.js, E
 ```bash
 Ecommerce-Website/
 │
-├── frontend/
-│   ├── index.html
-│   ├── css/
-│   ├── js/
-│   └── assets/
+├── index.html
+├── css/
+│   └── style.css
+├── js/
+│   └── script.js
+├── assets/
+│   ├── images/
+│   └── icons/
 │
-├── backend/
-│   ├── controllers/
-│   ├── models/
-│   ├── routes/
-│   ├── middleware/
-│   └── server.js
-│
-├── package.json
-├── README.md
-└── .env
+└── README.md
 ```
 
 ---
@@ -90,67 +86,58 @@ git clone https://github.com/VisheshPanwar2003/Ecommerce-Website.git
 cd Ecommerce-Website
 ```
 
-### 2. Install Dependencies
+### 2. Run the Website
+
+Since this is a static website, no backend setup or package installation is required.
+
+Simply open:
 
 ```bash
-npm install
+index.html
 ```
 
-### 3. Configure Environment Variables
+in your browser.
 
-Create a `.env` file in the root directory and add:
-
-```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-```
-
-### 4. Run the Project
-
-```bash
-npm start
-```
-
-For development:
-
-```bash
-npm run dev
-```
+You can also use **Live Server** in Visual Studio Code for a better development experience.
 
 ---
 
 ## 🎯 Key Highlights
 
-- Supports **100+ products**
-- Separate **Seller and User Modules**
-- Full **CRUD Operations** for Products
-- Responsive Design
-- Secure Authentication System
-- MongoDB Integration
-- Role-Based Authorization
+* Built entirely with **HTML, CSS, and JavaScript**
+* Supports **100+ products**
+* Dynamic product rendering
+* Product search and category filtering
+* Functional shopping cart
+* LocalStorage-based cart persistence
+* Fully responsive design
+* Clean and modern user interface
+* No backend or database required
+* Easy to deploy on static hosting platforms
 
 ---
 
 ## 📈 Future Enhancements
 
-- Payment Gateway Integration
-- Wishlist Functionality
-- Order Tracking
-- Product Reviews & Ratings
-- Email Notifications
-- Admin Analytics Dashboard
-- Recommendation System
+* Payment gateway integration
+* Wishlist functionality
+* Product reviews and ratings
+* User authentication
+* Order history
+* Backend API integration
+* Admin dashboard
+* Real-time inventory management
+* Product recommendation system
+* Dark mode
+* Improved checkout experience
 
 ---
 
 ## 🔗 Project Links
 
-🌐 **Live Website:**  
-https://ecommerce.visheshpanwar.me/
+🌐 **Live Website:** ecommerce.visheshpanwar.me
 
-📂 **GitHub Repository:**  
-https://github.com/VisheshPanwar2003/Ecommerce-Website
+📂 **GitHub Repository:** github.com/VisheshPanwar2003/Ecommerce-Website
 
 ---
 
@@ -158,13 +145,13 @@ https://github.com/VisheshPanwar2003/Ecommerce-Website
 
 **Vishesh Panwar**
 
-- Portfolio: https://visheshpanwar.me
-- LinkedIn: https://linkedin.com/in/visheshpanwar
-- GitHub: https://github.com/VisheshPanwar2003
-- Email: visheshpanwar3@gmail.com
+* Portfolio: visheshpanwar.me
+* LinkedIn: linkedin.com/in/visheshpanwar
+* GitHub: github.com/VisheshPanwar2003
+* Email: [visheshpanwar3@gmail.com](mailto:visheshpanwar3@gmail.com)
 
 ---
 
 ## ⭐ Support
 
-If you like this project, please consider giving it a **Star ⭐** on GitHub.
+If you like this project, please consider giving it a **Star ⭐** on GitHub!
