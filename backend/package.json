@@ -9,7 +9,11 @@
     "dev": "node --watch src/server.js"
   },
   "dependencies": {
+    "@prisma/client": "^6.4.1",
+    "dotenv": "^18.0.3",
     "express": "^4.21.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "prisma": "^6.4.1"
+  }
 }
