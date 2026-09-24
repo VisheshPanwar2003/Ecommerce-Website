@@ -247,6 +247,19 @@ export class ProductsRepository {
       where: { id: categoryId }
     });
   }
+
+  async getRatingStats(productId) {
+    const result = await prisma.review.aggregate({
+      where: { productId },
+      _avg: { rating: true },
+      _count: { rating: true }
+    });
+
+    return {
+      average: result._avg.rating !== null ? Math.round(result._avg.rating * 10) / 10 : null,
+      count: result._count.rating
+    };
+  }
 }
 
 export default new ProductsRepository();

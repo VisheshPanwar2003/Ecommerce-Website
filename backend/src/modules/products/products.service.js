@@ -91,7 +91,8 @@ export class ProductsService {
     if (!product) {
       throw new AppError('Product not found', 404);
     }
-    return product;
+    const rating = await productsRepository.getRatingStats(id);
+    return { ...product, rating };
   }
 
   async createProduct(user, productData) {

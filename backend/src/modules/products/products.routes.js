@@ -17,12 +17,14 @@ import authenticate from '../../middleware/auth.middleware.js';
 import { requireRole } from '../../middleware/role.middleware.js';
 import variantRoutes from '../productVariants/productVariants.routes.js';
 import imageRoutes from '../productImages/productImages.routes.js';
+import { productReviewRouter } from '../reviews/review.routes.js';
 
 const router = Router();
 
 // Nested sub-resource routes
 router.use('/:productId/variants', variantRoutes);
 router.use('/:productId/images', imageRoutes);
+router.use('/:productId/reviews', productReviewRouter);
 
 // Public read routes
 router.get('/', validate(listProductsQuerySchema), getProducts);
