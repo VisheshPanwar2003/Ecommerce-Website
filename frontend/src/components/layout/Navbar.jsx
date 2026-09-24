@@ -36,6 +36,15 @@ export const Navbar = () => {
                 Seller Portal
               </Link>
             )}
+            {user?.role === 'ADMIN' && (
+              <Link
+                to="/admin"
+                className="px-2.5 py-1 rounded-md text-indigo-900 hover:text-black bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 transition-colors font-medium flex items-center gap-1.5 text-xs font-mono"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
+                Admin Portal
+              </Link>
+            )}
           </nav>
         </div>
 

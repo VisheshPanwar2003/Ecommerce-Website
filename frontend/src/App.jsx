@@ -13,6 +13,13 @@ import SellerProductFormPage from './pages/seller/SellerProductFormPage.jsx';
 import SellerInventoryPage from './pages/seller/SellerInventoryPage.jsx';
 import SellerOrdersPage from './pages/seller/SellerOrdersPage.jsx';
 import SellerOrderDetailPage from './pages/seller/SellerOrderDetailPage.jsx';
+import AdminDashboardPage from './pages/admin/AdminDashboardPage.jsx';
+import AdminUsersPage from './pages/admin/AdminUsersPage.jsx';
+import AdminSellersPage from './pages/admin/AdminSellersPage.jsx';
+import AdminProductsPage from './pages/admin/AdminProductsPage.jsx';
+import AdminCategoriesPage from './pages/admin/AdminCategoriesPage.jsx';
+import AdminOrdersPage from './pages/admin/AdminOrdersPage.jsx';
+import AdminOrderDetailPage from './pages/admin/AdminOrderDetailPage.jsx';
 
 function App() {
   return (
@@ -86,6 +93,64 @@ function App() {
                   element={
                     <ProtectedRoute allowedRoles={['SELLER', 'ADMIN']}>
                       <SellerOrderDetailPage />
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* Admin Management Portal */}
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute allowedRoles={['ADMIN']}>
+                      <AdminDashboardPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/users"
+                  element={
+                    <ProtectedRoute allowedRoles={['ADMIN']}>
+                      <AdminUsersPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/sellers"
+                  element={
+                    <ProtectedRoute allowedRoles={['ADMIN']}>
+                      <AdminSellersPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/products"
+                  element={
+                    <ProtectedRoute allowedRoles={['ADMIN']}>
+                      <AdminProductsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/categories"
+                  element={
+                    <ProtectedRoute allowedRoles={['ADMIN']}>
+                      <AdminCategoriesPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/orders"
+                  element={
+                    <ProtectedRoute allowedRoles={['ADMIN']}>
+                      <AdminOrdersPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/orders/:id"
+                  element={
+                    <ProtectedRoute allowedRoles={['ADMIN']}>
+                      <AdminOrderDetailPage />
                     </ProtectedRoute>
                   }
                 />
