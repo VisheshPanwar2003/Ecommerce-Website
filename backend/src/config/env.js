@@ -18,12 +18,18 @@ if (!JWT_SECRET && NODE_ENV !== 'test') {
   process.exit(1);
 }
 
+const TEST_DATABASE_URL = process.env.TEST_DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/ecommerce_test?schema=public';
+const activeDatabaseUrl = (NODE_ENV === 'test' && TEST_DATABASE_URL)
+  ? TEST_DATABASE_URL
+  : (process.env.DATABASE_URL || DATABASE_URL);
+
 const CORS_ORIGIN = process.env.CORS_ORIGIN || process.env.FRONTEND_URL || 'http://localhost:5173,http://127.0.0.1:5173';
 
 export const env = {
   NODE_ENV,
   PORT,
-  DATABASE_URL,
+  DATABASE_URL: activeDatabaseUrl,
+  TEST_DATABASE_URL,
   JWT_SECRET,
   JWT_EXPIRES_IN,
   CORS_ORIGIN,

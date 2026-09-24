@@ -4,21 +4,10 @@ import AppError from '../../utils/AppError.js';
 
 export class CouponService {
   /**
-   * Validate a coupon against customer context and subtotal.
-   * Authoritative calculation: discount never exceeds subtotal.
+   * Pure calculation and validation of coupon rules against subtotal.
+   * Can be tested without DB or network dependencies.
    */
-  async validateCoupon({ code, userId, subtotal, tx }) {
-    if (!code || typeof code !== 'string') {
-      throw new AppError('Coupon code is required', 400);
-    }
-
-    const normalizedCode = code.trim().toUpperCase();
-    const coupon = await couponRepository.findByCode(normalizedCode, tx);
-
-    if (!coupon) {
-      throw new AppError('Invalid coupon code', 404);
-    }
-
+  calculateDiscount(coupon, subtotal) {
     if (!coupon.isActive) {
       throw new AppError('Coupon is inactive', 400);
     }
@@ -62,6 +51,25 @@ export class CouponService {
       discountFormatted: discountDecimal.toFixed(2),
       subtotal: subtotalDec
     };
+  }
+
+  /**
+   * Validate a coupon against customer context and subtotal.
+   * Authoritative calculation: discount never exceeds subtotal.
+   */
+  async validateCoupon({ code, userId, subtotal, tx }) {
+    if (!code || typeof code !== 'string') {
+      throw new AppError('Coupon code is required', 400);
+    }
+
+    const normalizedCode = code.trim().toUpperCase();
+    const coupon = await couponRepository.findByCode(normalizedCode, tx);
+
+    if (!coupon) {
+      throw new AppError('Invalid coupon code', 404);
+    }
+
+    return this.calculateDiscount(coupon, subtotal);
   }
 
   /**
