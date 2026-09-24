@@ -22,6 +22,28 @@ export const register = asyncHandler(async (req, res) => {
   });
 });
 
+export const login = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  const { user, accessToken } = await authService.loginUser({ email, password });
+
+  return res.status(200).json({
+    success: true,
+    message: 'Login successful',
+    data: {
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        status: user.status
+      },
+      accessToken
+    }
+  });
+});
+
 export default {
-  register
+  register,
+  login
 };

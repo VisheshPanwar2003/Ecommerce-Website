@@ -7,6 +7,21 @@ export class AuthRepository {
     });
   }
 
+  async findUserForLoginByEmail(email) {
+    return prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        password: true,
+        role: true,
+        status: true,
+        createdAt: true
+      }
+    });
+  }
+
   async createUser({ name, email, password, role = 'CUSTOMER', status = 'ACTIVE' }) {
     return prisma.user.create({
       data: {
