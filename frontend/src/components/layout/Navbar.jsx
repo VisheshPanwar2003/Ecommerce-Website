@@ -20,13 +20,22 @@ export const Navbar = () => {
             </span>
           </Link>
 
-          <nav className="hidden sm:flex items-center gap-1 text-sm">
+          <nav className="hidden sm:flex items-center gap-2 text-sm">
             <Link
               to="/shop"
               className="px-3 py-1.5 rounded-md text-neutral-700 hover:text-neutral-950 hover:bg-neutral-100 transition-colors font-medium"
             >
               Catalogue
             </Link>
+            {(user?.role === 'SELLER' || user?.role === 'ADMIN') && (
+              <Link
+                to="/seller"
+                className="px-2.5 py-1 rounded-md text-neutral-800 hover:text-black bg-neutral-100 hover:bg-neutral-200/80 border border-neutral-200 transition-colors font-medium flex items-center gap-1.5 text-xs font-mono"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                Seller Portal
+              </Link>
+            )}
           </nav>
         </div>
 

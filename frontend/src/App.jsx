@@ -6,6 +6,8 @@ import { ToastProvider } from './components/common/Toast.jsx';
 import Layout from './components/layout/Layout.jsx';
 import ShopPage from './pages/shop/ShopPage.jsx';
 import ProductDetailsPage from './pages/shop/ProductDetailsPage.jsx';
+import ProtectedRoute from './components/common/ProtectedRoute.jsx';
+import SellerDashboardPage from './pages/seller/SellerDashboardPage.jsx';
 
 function App() {
   return (
@@ -24,6 +26,24 @@ function App() {
                 {/* Product Details Page */}
                 <Route path="/product/:id" element={<ProductDetailsPage />} />
                 <Route path="/products/:id" element={<Navigate to="/product/:id" replace />} />
+
+                {/* Seller Management Dashboard */}
+                <Route
+                  path="/seller"
+                  element={
+                    <ProtectedRoute allowedRoles={['SELLER', 'ADMIN']}>
+                      <SellerDashboardPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/seller/*"
+                  element={
+                    <ProtectedRoute allowedRoles={['SELLER', 'ADMIN']}>
+                      <SellerDashboardPage />
+                    </ProtectedRoute>
+                  }
+                />
 
                 {/* Fallback 404 Route */}
                 <Route

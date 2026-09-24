@@ -9,6 +9,7 @@ import wishlistRoutes from '../modules/wishlist/wishlist.routes.js';
 import checkoutRoutes from '../modules/checkout/checkout.routes.js';
 import orderRoutes from '../modules/orders/order.routes.js';
 import inventoryRoutes from '../modules/inventory/inventory.routes.js';
+import sellerRoutes from '../modules/seller/seller.routes.js';
 
 const router = Router();
 
@@ -22,5 +23,6 @@ router.use('/wishlist', wishlistRoutes);
 router.use('/checkout', checkoutRoutes);
 router.use('/orders', orderRoutes);
 router.use('/inventory', inventoryRoutes);
+router.use('/seller', sellerRoutes);
 
 export default router;
