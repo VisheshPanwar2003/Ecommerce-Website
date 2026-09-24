@@ -1,26 +1,29 @@
 import express from 'express';
-import prisma from './config/prisma.js';
+import cors from 'cors';
+import helmet from 'helmet';
+
+import apiV1Routes from './routes/index.js';
+import { getHealth } from './modules/health/health.controller.js';
+import notFoundMiddleware from './middleware/notFound.middleware.js';
+import errorMiddleware from './middleware/error.middleware.js';
 
 const app = express();
 
+// Security and utility middleware
+app.use(helmet());
+app.use(cors());
 app.use(express.json());
 
-app.get('/health', async (req, res) => {
-  try {
-    await prisma.$queryRaw`SELECT 1`;
-    res.status(200).json({
-      success: true,
-      message: 'E-commerce API is running',
-      database: 'connected'
-    });
-  } catch (error) {
-    res.status(503).json({
-      success: false,
-      message: 'E-commerce API is running',
-      database: 'disconnected',
-      error: error.message
-    });
-  }
-});
+// Compatibility route for root /health
+app.get('/health', getHealth);
+
+// Versioned API routes
+app.use('/api/v1', apiV1Routes);
+
+// 404 handler for unknown routes
+app.use(notFoundMiddleware);
+
+// Central error handler
+app.use(errorMiddleware);
 
 export default app;
