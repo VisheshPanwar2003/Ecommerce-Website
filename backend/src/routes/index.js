@@ -6,6 +6,7 @@ import categoryRoutes from '../modules/categories/categories.routes.js';
 import productRoutes from '../modules/products/products.routes.js';
 import cartRoutes from '../modules/cart/cart.routes.js';
 import wishlistRoutes from '../modules/wishlist/wishlist.routes.js';
+import checkoutRoutes from '../modules/checkout/checkout.routes.js';
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.use('/categories', categoryRoutes);
 router.use('/products', productRoutes);
 router.use('/cart', cartRoutes);
 router.use('/wishlist', wishlistRoutes);
+router.use('/checkout', checkoutRoutes);
 
 export default router;
