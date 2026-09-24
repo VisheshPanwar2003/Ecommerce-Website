@@ -63,6 +63,29 @@ export class ProductsRepository {
             id: true,
             storeName: true
           }
+        },
+        variants: {
+          select: {
+            id: true,
+            name: true,
+            sku: true,
+            price: true,
+            stock: true,
+            isActive: true
+          },
+          orderBy: { createdAt: 'asc' }
+        },
+        images: {
+          select: {
+            id: true,
+            url: true,
+            altText: true,
+            displayOrder: true
+          },
+          orderBy: [
+            { displayOrder: 'asc' },
+            { createdAt: 'asc' }
+          ]
         }
       }
     });
