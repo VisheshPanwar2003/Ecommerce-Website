@@ -25,6 +25,16 @@ import {
   updateCategorySchema,
   categoryIdParamSchema
 } from '../categories/categories.validation.js';
+import {
+  getCoupons,
+  createCoupon,
+  updateCoupon,
+  deleteCoupon
+} from '../coupons/coupon.controller.js';
+import {
+  createCouponSchema,
+  updateCouponSchema
+} from '../coupons/coupon.validation.js';
 import validate from '../../middleware/validate.middleware.js';
 import authenticate from '../../middleware/auth.middleware.js';
 import { requireRole } from '../../middleware/role.middleware.js';
@@ -59,5 +69,11 @@ router.delete('/categories/:id', validate(categoryIdParamSchema), deleteCategory
 // Order Overview
 router.get('/orders', getOrders);
 router.get('/orders/:id', validate(uuidParamSchema), getOrderById);
+
+// Platform Coupons Management (Admin only)
+router.get('/coupons', getCoupons);
+router.post('/coupons', validate(createCouponSchema), createCoupon);
+router.patch('/coupons/:id', validate(updateCouponSchema), updateCoupon);
+router.delete('/coupons/:id', validate(uuidParamSchema), deleteCoupon);
 
 export default router;

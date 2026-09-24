@@ -20,6 +20,8 @@ import AdminProductsPage from './pages/admin/AdminProductsPage.jsx';
 import AdminCategoriesPage from './pages/admin/AdminCategoriesPage.jsx';
 import AdminOrdersPage from './pages/admin/AdminOrdersPage.jsx';
 import AdminOrderDetailPage from './pages/admin/AdminOrderDetailPage.jsx';
+import AdminCouponsPage from './pages/admin/AdminCouponsPage.jsx';
+import CheckoutPage from './pages/shop/CheckoutPage.jsx';
 
 function App() {
   return (
@@ -38,6 +40,17 @@ function App() {
                 {/* Product Details Page */}
                 <Route path="/product/:id" element={<ProductDetailsPage />} />
                 <Route path="/products/:id" element={<Navigate to="/product/:id" replace />} />
+
+                {/* Checkout & Cart Page */}
+                <Route
+                  path="/checkout"
+                  element={
+                    <ProtectedRoute allowedRoles={['CUSTOMER', 'ADMIN']}>
+                      <CheckoutPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="/cart" element={<Navigate to="/checkout" replace />} />
 
                 {/* Seller Management Portal */}
                 <Route
@@ -151,6 +164,14 @@ function App() {
                   element={
                     <ProtectedRoute allowedRoles={['ADMIN']}>
                       <AdminOrderDetailPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/coupons"
+                  element={
+                    <ProtectedRoute allowedRoles={['ADMIN']}>
+                      <AdminCouponsPage />
                     </ProtectedRoute>
                   }
                 />

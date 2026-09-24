@@ -8,5 +8,6 @@ const router = Router();
 router.use(authenticate);
 
 router.get('/summary', getCheckoutSummary);
+router.post('/summary', getCheckoutSummary);
 
 export default router;

@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client';
 import checkoutRepository from './checkout.repository.js';
+import couponService from '../coupons/coupon.service.js';
 
 export class CheckoutService {
   /**
@@ -18,12 +19,13 @@ export class CheckoutService {
     return new Prisma.Decimal(99);
   }
 
-  async getCheckoutSummary(userId) {
+  async getCheckoutSummary(userId, options = {}) {
     const cart = await checkoutRepository.findCartForCheckout(userId);
 
     const items = cart?.items || [];
     let subtotalDecimal = new Prisma.Decimal(0);
-    const discountDecimal = new Prisma.Decimal(0); // Scope: 0.00 for Task 17
+    let discountDecimal = new Prisma.Decimal(0);
+    let appliedCoupon = null;
     let allItemsAvailable = items.length > 0;
 
     const formattedItems = items.map((item) => {
@@ -114,6 +116,21 @@ export class CheckoutService {
       };
     });
 
+    if (options.couponCode) {
+      const validation = await couponService.validateCoupon({
+        code: options.couponCode,
+        userId,
+        subtotal: subtotalDecimal
+      });
+      discountDecimal = validation.discountAmount;
+      appliedCoupon = {
+        id: validation.coupon.id,
+        code: validation.coupon.code,
+        discountType: validation.coupon.discountType,
+        discountValue: Number(validation.coupon.discountValue)
+      };
+    }
+
     const shippingDecimal = this.calculateShipping(subtotalDecimal, items.length);
     const totalDecimal = subtotalDecimal.add(shippingDecimal).sub(discountDecimal);
 
@@ -123,7 +140,8 @@ export class CheckoutService {
       subtotal: subtotalDecimal.toFixed(2),
       discount: discountDecimal.toFixed(2),
       shipping: shippingDecimal.toFixed(2),
-      total: totalDecimal.toFixed(2)
+      total: totalDecimal.toFixed(2),
+      coupon: appliedCoupon
     };
   }
 }

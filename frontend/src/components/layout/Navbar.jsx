@@ -91,8 +91,7 @@ export const Navbar = () => {
               if (!isAuthenticated) {
                 promptLogin('Sign in to view your cart');
               } else {
-                // Future cart page
-                navigate('/shop');
+                navigate('/checkout');
               }
             }}
             className="relative p-2 text-neutral-600 hover:text-neutral-950 rounded-lg hover:bg-neutral-100 transition-colors"

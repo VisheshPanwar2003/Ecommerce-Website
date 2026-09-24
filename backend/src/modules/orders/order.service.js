@@ -1,5 +1,7 @@
 import { Prisma } from '@prisma/client';
 import orderRepository from './order.repository.js';
+import couponService from '../coupons/coupon.service.js';
+import couponRepository from '../coupons/coupon.repository.js';
 import AppError from '../../utils/AppError.js';
 
 export class OrderService {
@@ -82,7 +84,8 @@ export class OrderService {
       }
 
       let subtotalDecimal = new Prisma.Decimal(0);
-      const discountDecimal = new Prisma.Decimal(0); // Task 20 scope: 0.00
+      let discountDecimal = new Prisma.Decimal(0);
+      let validatedCoupon = null;
       const orderItemsData = [];
       const deductionsToPerform = [];
 
@@ -155,6 +158,28 @@ export class OrderService {
           quantity: item.quantity,
           name: item.variant ? `${item.product.name} (${item.variant.name})` : item.product.name
         });
+      }
+
+      // 3.5. Authoritative Coupon Validation inside Transaction
+      if (options.couponCode) {
+        const validation = await couponService.validateCoupon({
+          code: options.couponCode,
+          userId,
+          subtotal: subtotalDecimal,
+          tx
+        });
+        discountDecimal = validation.discountAmount;
+        validatedCoupon = validation.coupon;
+
+        // Atomic usage limit check and increment inside transaction
+        const incrementSuccess = await couponRepository.atomicIncrementUsage(
+          validatedCoupon.id,
+          validatedCoupon.usageLimit,
+          tx
+        );
+        if (!incrementSuccess) {
+          throw new AppError('Coupon usage limit has been reached', 400);
+        }
       }
 
       // 4. Recalculate shipping & final total
@@ -279,6 +304,18 @@ export class OrderService {
           quantity: deduction.quantity,
           orderId: order.id
         });
+      }
+
+      // 8.5. Record CouponUsage inside transaction
+      if (validatedCoupon) {
+        await couponRepository.recordUsage(
+          {
+            couponId: validatedCoupon.id,
+            userId,
+            orderId: order.id
+          },
+          tx
+        );
       }
 
       // 9. Clear customer's cart inside transaction

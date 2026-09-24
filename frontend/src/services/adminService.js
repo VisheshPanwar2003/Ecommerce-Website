@@ -64,6 +64,26 @@ export const getAdminOrder = async (id) => {
   return response.data?.data?.order || null;
 };
 
+export const getAdminCoupons = async () => {
+  const response = await api.get('/admin/coupons');
+  return response.data?.data?.coupons || [];
+};
+
+export const createAdminCoupon = async (data) => {
+  const response = await api.post('/admin/coupons', data);
+  return response.data?.data?.coupon || response.data?.data;
+};
+
+export const updateAdminCoupon = async (id, data) => {
+  const response = await api.patch(`/admin/coupons/${id}`, data);
+  return response.data?.data?.coupon || response.data?.data;
+};
+
+export const deleteAdminCoupon = async (id) => {
+  const response = await api.delete(`/admin/coupons/${id}`);
+  return response.data;
+};
+
 export default {
   getAdminDashboard,
   getAdminUsers,
@@ -77,5 +97,9 @@ export default {
   updateCategory,
   deleteCategory,
   getAdminOrders,
-  getAdminOrder
+  getAdminOrder,
+  getAdminCoupons,
+  createAdminCoupon,
+  updateAdminCoupon,
+  deleteAdminCoupon
 };

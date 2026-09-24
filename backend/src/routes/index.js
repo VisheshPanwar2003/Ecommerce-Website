@@ -12,6 +12,7 @@ import inventoryRoutes from '../modules/inventory/inventory.routes.js';
 import sellerRoutes from '../modules/seller/seller.routes.js';
 import adminRoutes from '../modules/admin/admin.routes.js';
 import { reviewRouter } from '../modules/reviews/review.routes.js';
+import couponRoutes from '../modules/coupons/coupon.routes.js';
 
 const router = Router();
 
@@ -28,5 +29,6 @@ router.use('/inventory', inventoryRoutes);
 router.use('/seller', sellerRoutes);
 router.use('/admin', adminRoutes);
 router.use('/reviews', reviewRouter);
+router.use('/coupons', couponRoutes);
 
 export default router;

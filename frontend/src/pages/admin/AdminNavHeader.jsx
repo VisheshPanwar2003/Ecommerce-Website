@@ -122,6 +122,16 @@ export const AdminNavHeader = () => {
         >
           Marketplace Orders
         </Link>
+        <Link
+          to="/admin/coupons"
+          className={`px-4 py-2.5 text-xs font-medium border-b-2 whitespace-nowrap transition-colors ${
+            isCurrent('/admin/coupons')
+              ? 'border-neutral-900 text-neutral-900 font-semibold'
+              : 'border-transparent text-neutral-500 hover:text-neutral-800'
+          }`}
+        >
+          Coupons
+        </Link>
       </div>
     </div>
   );
