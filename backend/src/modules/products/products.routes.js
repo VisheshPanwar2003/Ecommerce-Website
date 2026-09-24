@@ -9,7 +9,8 @@ import {
 import {
   createProductSchema,
   updateProductSchema,
-  productIdParamSchema
+  productIdParamSchema,
+  listProductsQuerySchema
 } from './products.validation.js';
 import validate from '../../middleware/validate.middleware.js';
 import authenticate from '../../middleware/auth.middleware.js';
@@ -24,7 +25,7 @@ router.use('/:productId/variants', variantRoutes);
 router.use('/:productId/images', imageRoutes);
 
 // Public read routes
-router.get('/', getProducts);
+router.get('/', validate(listProductsQuerySchema), getProducts);
 router.get('/:id', validate(productIdParamSchema), getProductById);
 
 // Seller/Admin mutation routes

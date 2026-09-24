@@ -2,11 +2,14 @@ import productsService from './products.service.js';
 import asyncHandler from '../../middleware/asyncHandler.js';
 
 export const getProducts = asyncHandler(async (req, res) => {
-  const products = await productsService.getAllProducts(req.query);
+  const { products, pagination } = await productsService.getAllProducts(req.query);
 
   return res.status(200).json({
     success: true,
-    data: { products }
+    data: {
+      products,
+      pagination
+    }
   });
 });
 

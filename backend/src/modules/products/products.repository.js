@@ -35,6 +35,60 @@ export class ProductsRepository {
     });
   }
 
+  async findAndCount({ where = {}, orderBy = { createdAt: 'desc' }, skip = 0, take = 20 }) {
+    const [products, totalItems] = await Promise.all([
+      prisma.product.findMany({
+        where,
+        select: {
+          id: true,
+          sellerId: true,
+          categoryId: true,
+          name: true,
+          description: true,
+          sku: true,
+          price: true,
+          discount: true,
+          stock: true,
+          status: true,
+          createdAt: true,
+          updatedAt: true,
+          category: {
+            select: {
+              id: true,
+              name: true,
+              slug: true
+            }
+          },
+          seller: {
+            select: {
+              id: true,
+              storeName: true
+            }
+          },
+          images: {
+            select: {
+              id: true,
+              url: true,
+              altText: true,
+              displayOrder: true
+            },
+            orderBy: [
+              { displayOrder: 'asc' },
+              { createdAt: 'asc' }
+            ],
+            take: 1
+          }
+        },
+        orderBy,
+        skip,
+        take
+      }),
+      prisma.product.count({ where })
+    ]);
+
+    return { products, totalItems };
+  }
+
   async findById(id) {
     return prisma.product.findUnique({
       where: { id },

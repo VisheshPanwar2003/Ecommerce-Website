@@ -2,8 +2,88 @@ import productsRepository from './products.repository.js';
 import AppError from '../../utils/AppError.js';
 
 export class ProductsService {
-  async getAllProducts(filter = {}) {
-    return productsRepository.findAll(filter);
+  async getAllProducts(queryParams = {}) {
+    const {
+      search,
+      category,
+      minPrice,
+      maxPrice,
+      sort = 'newest',
+      page = 1,
+      limit = 20
+    } = queryParams;
+
+    // 1. Base filter: Public catalog shows only ACTIVE products belonging to ACTIVE categories
+    const where = {
+      status: 'ACTIVE',
+      category: {
+        isActive: true
+      }
+    };
+
+    // 2. Search filter: case-insensitive search on name or description
+    if (search && search.trim()) {
+      const term = search.trim();
+      where.OR = [
+        { name: { contains: term, mode: 'insensitive' } },
+        { description: { contains: term, mode: 'insensitive' } }
+      ];
+    }
+
+    // 3. Category filter: slug-based matching
+    if (category && category.trim()) {
+      where.category = {
+        ...where.category,
+        slug: category.trim().toLowerCase()
+      };
+    }
+
+    // 4. Price range filter
+    if (minPrice !== undefined || maxPrice !== undefined) {
+      where.price = {};
+      if (minPrice !== undefined) where.price.gte = minPrice;
+      if (maxPrice !== undefined) where.price.lte = maxPrice;
+    }
+
+    // 5. Safe sort mapping
+    const sortMapping = {
+      price_asc: { price: 'asc' },
+      price_desc: { price: 'desc' },
+      newest: { createdAt: 'desc' },
+      name_asc: { name: 'asc' },
+      name_desc: { name: 'desc' }
+    };
+    const orderBy = sortMapping[sort] || { createdAt: 'desc' };
+
+    // 6. Pagination calculations
+    const safePage = Math.max(1, parseInt(page, 10) || 1);
+    const safeLimit = Math.max(1, Math.min(50, parseInt(limit, 10) || 20));
+    const skip = (safePage - 1) * safeLimit;
+    const take = safeLimit;
+
+    // 7. Execute query via repository
+    const { products, totalItems } = await productsRepository.findAndCount({
+      where,
+      orderBy,
+      skip,
+      take
+    });
+
+    const totalPages = Math.ceil(totalItems / safeLimit);
+    const hasNextPage = safePage < totalPages;
+    const hasPreviousPage = safePage > 1;
+
+    return {
+      products,
+      pagination: {
+        page: safePage,
+        limit: safeLimit,
+        totalItems,
+        totalPages,
+        hasNextPage,
+        hasPreviousPage
+      }
+    };
   }
 
   async getProductById(id) {

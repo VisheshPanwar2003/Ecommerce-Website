@@ -133,3 +133,47 @@ export const productIdParamSchema = {
     id: z.string().uuid('Invalid product ID format')
   })
 };
+
+export const listProductsQuerySchema = {
+  query: z
+    .object({
+      search: z.string().trim().max(100, 'Search query cannot exceed 100 characters').optional(),
+      category: z.string().trim().max(100).optional(),
+      minPrice: z.coerce.number().min(0, 'minPrice must be non-negative').optional(),
+      maxPrice: z.coerce.number().min(0, 'maxPrice must be non-negative').optional(),
+      sort: z
+        .enum(['price_asc', 'price_desc', 'newest', 'name_asc', 'name_desc'], {
+          errorMap: () => ({
+            message: "Invalid sort option. Supported options: 'price_asc', 'price_desc', 'newest', 'name_asc', 'name_desc'"
+          })
+        })
+        .optional()
+        .default('newest'),
+      page: z.coerce
+        .number()
+        .int('Page must be an integer')
+        .min(1, 'Page must be greater than or equal to 1')
+        .optional()
+        .default(1),
+      limit: z.coerce
+        .number()
+        .int('Limit must be an integer')
+        .min(1, 'Limit must be greater than or equal to 1')
+        .max(50, 'Limit cannot exceed 50')
+        .optional()
+        .default(20)
+    })
+    .refine(
+      (data) => {
+        if (data.minPrice !== undefined && data.maxPrice !== undefined) {
+          return data.minPrice <= data.maxPrice;
+        }
+        return true;
+      },
+      {
+        message: 'minPrice cannot exceed maxPrice',
+        path: ['minPrice']
+      }
+    )
+};
+
