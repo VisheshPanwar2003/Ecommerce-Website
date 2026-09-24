@@ -118,6 +118,44 @@ export class SellerRepository {
       take: limit
     });
   }
+
+  /**
+   * Find a single product with category, variants, and images
+   */
+  async findProductById(productId) {
+    return prisma.product.findUnique({
+      where: { id: productId },
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true
+          }
+        },
+        variants: {
+          select: {
+            id: true,
+            name: true,
+            sku: true,
+            price: true,
+            stock: true,
+            isActive: true
+          },
+          orderBy: { createdAt: 'asc' }
+        },
+        images: {
+          select: {
+            id: true,
+            url: true,
+            altText: true,
+            displayOrder: true
+          },
+          orderBy: { displayOrder: 'asc' }
+        }
+      }
+    });
+  }
 }
 
 export default new SellerRepository();

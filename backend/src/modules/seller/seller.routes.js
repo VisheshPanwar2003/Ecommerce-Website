@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   getDashboardData,
   getSellerProducts,
+  getSellerProductById,
   getSellerOrders
 } from './seller.controller.js';
 import authenticate from '../../middleware/auth.middleware.js';
@@ -18,6 +19,7 @@ router.get('/dashboard', getDashboardData);
 
 // Seller products
 router.get('/products', getSellerProducts);
+router.get('/products/:id', getSellerProductById);
 
 // Seller orders
 router.get('/orders', getSellerOrders);

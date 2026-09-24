@@ -118,6 +118,7 @@ export class SellerService {
     // 3. Formatted Products list
     const formattedProducts = products.map((p) => ({
       id: p.id,
+      sellerId: p.sellerId,
       name: p.name,
       sku: p.sku,
       category: p.category
@@ -183,6 +184,7 @@ export class SellerService {
 
     return products.map((p) => ({
       id: p.id,
+      sellerId: p.sellerId,
       name: p.name,
       sku: p.sku,
       category: p.category
@@ -222,6 +224,39 @@ export class SellerService {
         : null,
       createdAt: item.order?.createdAt || item.createdAt
     }));
+  }
+
+  /**
+   * Get single product belonging to the authenticated seller
+   */
+  async getProductById(user, productId) {
+    const seller = await this.resolveSeller(user);
+    const product = await sellerRepository.findProductById(productId);
+    if (!product) {
+      throw new AppError('Product not found', 404);
+    }
+    if (user.role === 'SELLER' && product.sellerId !== seller.id) {
+      throw new AppError('Forbidden: You do not have permission to access this product', 403);
+    }
+    return {
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      sku: product.sku,
+      price: Number(product.price),
+      discount: Number(product.discount),
+      stock: product.stock,
+      status: product.status,
+      categoryId: product.categoryId,
+      category: product.category,
+      variants: product.variants.map((v) => ({
+        ...v,
+        price: v.price != null ? Number(v.price) : null
+      })),
+      images: product.images,
+      createdAt: product.createdAt,
+      updatedAt: product.updatedAt
+    };
   }
 }
 

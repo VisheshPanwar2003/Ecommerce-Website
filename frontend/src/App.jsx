@@ -8,6 +8,9 @@ import ShopPage from './pages/shop/ShopPage.jsx';
 import ProductDetailsPage from './pages/shop/ProductDetailsPage.jsx';
 import ProtectedRoute from './components/common/ProtectedRoute.jsx';
 import SellerDashboardPage from './pages/seller/SellerDashboardPage.jsx';
+import SellerProductsPage from './pages/seller/SellerProductsPage.jsx';
+import SellerProductFormPage from './pages/seller/SellerProductFormPage.jsx';
+import SellerInventoryPage from './pages/seller/SellerInventoryPage.jsx';
 
 function App() {
   return (
@@ -27,7 +30,7 @@ function App() {
                 <Route path="/product/:id" element={<ProductDetailsPage />} />
                 <Route path="/products/:id" element={<Navigate to="/product/:id" replace />} />
 
-                {/* Seller Management Dashboard */}
+                {/* Seller Management Portal */}
                 <Route
                   path="/seller"
                   element={
@@ -37,10 +40,34 @@ function App() {
                   }
                 />
                 <Route
-                  path="/seller/*"
+                  path="/seller/products"
                   element={
                     <ProtectedRoute allowedRoles={['SELLER', 'ADMIN']}>
-                      <SellerDashboardPage />
+                      <SellerProductsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/seller/products/new"
+                  element={
+                    <ProtectedRoute allowedRoles={['SELLER', 'ADMIN']}>
+                      <SellerProductFormPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/seller/products/:id/edit"
+                  element={
+                    <ProtectedRoute allowedRoles={['SELLER', 'ADMIN']}>
+                      <SellerProductFormPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/seller/inventory"
+                  element={
+                    <ProtectedRoute allowedRoles={['SELLER', 'ADMIN']}>
+                      <SellerInventoryPage />
                     </ProtectedRoute>
                   }
                 />
