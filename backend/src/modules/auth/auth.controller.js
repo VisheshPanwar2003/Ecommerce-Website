@@ -43,7 +43,26 @@ export const login = asyncHandler(async (req, res) => {
   });
 });
 
+export const getMe = asyncHandler(async (req, res) => {
+  return res.status(200).json({
+    success: true,
+    data: {
+      id: req.user.id,
+      role: req.user.role
+    }
+  });
+});
+
+export const checkAdmin = asyncHandler(async (req, res) => {
+  return res.status(200).json({
+    success: true,
+    message: 'Admin access granted'
+  });
+});
+
 export default {
   register,
-  login
+  login,
+  getMe,
+  checkAdmin
 };

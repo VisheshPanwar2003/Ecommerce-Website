@@ -7,6 +7,11 @@ export const signAccessToken = (payload) => {
   });
 };
 
+export const verifyAccessToken = (token) => {
+  return jwt.verify(token, env.JWT_SECRET);
+};
+
 export default {
-  signAccessToken
+  signAccessToken,
+  verifyAccessToken
 };
