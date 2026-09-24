@@ -18,7 +18,10 @@ import {
   uuidParamSchema,
   updateUserStatusSchema,
   updateSellerStatusSchema,
-  updateProductStatusSchema
+  updateProductStatusSchema,
+  getUsersQuerySchema,
+  getSellersQuerySchema,
+  getOrdersQuerySchema
 } from './admin.validation.js';
 import {
   createCategorySchema,
@@ -49,11 +52,11 @@ router.use(requireRole('ADMIN'));
 router.get('/dashboard', getDashboard);
 
 // User Management
-router.get('/users', getUsers);
+router.get('/users', validate(getUsersQuerySchema), getUsers);
 router.patch('/users/:id/status', validate(updateUserStatusSchema), updateUserStatus);
 
 // Seller Moderation
-router.get('/sellers', getSellers);
+router.get('/sellers', validate(getSellersQuerySchema), getSellers);
 router.patch('/sellers/:id/status', validate(updateSellerStatusSchema), updateSellerStatus);
 
 // Product Moderation
@@ -67,7 +70,7 @@ router.patch('/categories/:id', validate(updateCategorySchema), updateCategory);
 router.delete('/categories/:id', validate(categoryIdParamSchema), deleteCategory);
 
 // Order Overview
-router.get('/orders', getOrders);
+router.get('/orders', validate(getOrdersQuerySchema), getOrders);
 router.get('/orders/:id', validate(uuidParamSchema), getOrderById);
 
 // Platform Coupons Management (Admin only)

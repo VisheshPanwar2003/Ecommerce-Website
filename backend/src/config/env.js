@@ -18,12 +18,15 @@ if (!JWT_SECRET && NODE_ENV !== 'test') {
   process.exit(1);
 }
 
+const CORS_ORIGIN = process.env.CORS_ORIGIN || process.env.FRONTEND_URL || 'http://localhost:5173,http://127.0.0.1:5173';
+
 export const env = {
   NODE_ENV,
   PORT,
   DATABASE_URL,
   JWT_SECRET,
   JWT_EXPIRES_IN,
+  CORS_ORIGIN,
   isProduction: NODE_ENV === 'production',
   isDevelopment: NODE_ENV === 'development',
   isTest: NODE_ENV === 'test'

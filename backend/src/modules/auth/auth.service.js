@@ -10,7 +10,7 @@ export class AuthService {
     const normalizedEmail = email.trim().toLowerCase();
 
     // 1. Pre-check for duplicate email
-    const existingUser = await authRepository.findUserByEmail(normalizedEmail);
+    const existingUser = await authRepository.findUserByEmailForRegistration(normalizedEmail);
     if (existingUser) {
       throw new AppError('Email is already registered', 409);
     }
@@ -41,8 +41,8 @@ export class AuthService {
   async loginUser({ email, password }) {
     const normalizedEmail = email.trim().toLowerCase();
 
-    // 1. Retrieve user with password hash internally
-    const user = await authRepository.findUserForLoginByEmail(normalizedEmail);
+    // 1. Retrieve user with password hash internally for authentication
+    const user = await authRepository.findUserByEmailForLogin(normalizedEmail);
 
     // 2. Generic auth error to prevent user enumeration
     if (!user) {

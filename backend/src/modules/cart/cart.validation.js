@@ -14,6 +14,7 @@ export const addItemSchema = {
       .number({ required_error: 'Quantity is required' })
       .int('Quantity must be an integer')
       .min(1, 'Quantity must be at least 1')
+      .max(999, 'Quantity cannot exceed 999')
   })
 };
 
@@ -26,6 +27,7 @@ export const updateItemQuantitySchema = {
       .number({ required_error: 'Quantity is required' })
       .int('Quantity must be an integer')
       .min(1, 'Quantity must be at least 1')
+      .max(999, 'Quantity cannot exceed 999')
   })
 };
 

@@ -38,3 +38,39 @@ export const updateProductStatusSchema = {
     })
   })
 };
+
+export const getUsersQuerySchema = {
+  query: z
+    .object({
+      search: z.string().trim().max(100).optional(),
+      role: z.enum(['CUSTOMER', 'SELLER', 'ADMIN']).optional(),
+      status: z.enum(['ACTIVE', 'SUSPENDED']).optional(),
+      page: z.coerce.number().int().min(1).optional(),
+      limit: z.coerce.number().int().min(1).max(100).optional()
+    })
+    .optional()
+};
+
+export const getSellersQuerySchema = {
+  query: z
+    .object({
+      search: z.string().trim().max(100).optional(),
+      status: z.enum(['ACTIVE', 'SUSPENDED']).optional(),
+      page: z.coerce.number().int().min(1).optional(),
+      limit: z.coerce.number().int().min(1).max(100).optional()
+    })
+    .optional()
+};
+
+export const getOrdersQuerySchema = {
+  query: z
+    .object({
+      search: z.string().trim().max(100).optional(),
+      status: z
+        .enum(['PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'])
+        .optional(),
+      page: z.coerce.number().int().min(1).optional(),
+      limit: z.coerce.number().int().min(1).max(100).optional()
+    })
+    .optional()
+};

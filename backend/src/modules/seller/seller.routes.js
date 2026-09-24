@@ -8,6 +8,7 @@ import {
   updateSellerOrderStatus
 } from './seller.controller.js';
 import {
+  productIdParamSchema,
   orderIdParamSchema,
   updateOrderStatusSchema
 } from './seller.validation.js';
@@ -26,7 +27,7 @@ router.get('/dashboard', getDashboardData);
 
 // Seller products
 router.get('/products', getSellerProducts);
-router.get('/products/:id', getSellerProductById);
+router.get('/products/:id', validate(productIdParamSchema), getSellerProductById);
 
 // Seller orders
 router.get('/orders', getSellerOrders);

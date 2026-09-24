@@ -1,5 +1,11 @@
 import { z } from 'zod';
 
+export const productIdParamSchema = {
+  params: z.object({
+    id: z.string().uuid('Invalid product ID format')
+  })
+};
+
 export const orderIdParamSchema = {
   params: z.object({
     id: z.string().uuid('Invalid order ID format')

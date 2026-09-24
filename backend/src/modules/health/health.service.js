@@ -10,7 +10,7 @@ export class HealthService {
     } catch (error) {
       return {
         database: 'disconnected',
-        error: error.message
+        error: 'Database connection unavailable'
       };
     }
   }
