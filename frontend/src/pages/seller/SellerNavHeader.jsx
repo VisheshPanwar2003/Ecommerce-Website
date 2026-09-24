@@ -102,6 +102,16 @@ export const SellerNavHeader = ({ storeName, storeStatus = 'ACTIVE' }) => {
         >
           Inventory Management
         </Link>
+        <Link
+          to="/seller/orders"
+          className={`px-4 py-2.5 text-xs font-medium border-b-2 transition-colors ${
+            isCurrent('/seller/orders')
+              ? 'border-neutral-900 text-neutral-900 font-semibold'
+              : 'border-transparent text-neutral-500 hover:text-neutral-800'
+          }`}
+        >
+          Orders
+        </Link>
       </div>
     </div>
   );

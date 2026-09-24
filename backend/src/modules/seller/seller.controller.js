@@ -44,9 +44,36 @@ export const getSellerProductById = asyncHandler(async (req, res) => {
   });
 });
 
+export const getSellerOrderById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const order = await sellerService.getOrderById(req.user, id);
+
+  return res.status(200).json({
+    success: true,
+    data: {
+      order
+    }
+  });
+});
+
+export const updateSellerOrderStatus = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  const order = await sellerService.updateOrderStatus(req.user, id, status);
+
+  return res.status(200).json({
+    success: true,
+    data: {
+      order
+    }
+  });
+});
+
 export default {
   getDashboardData,
   getSellerProducts,
   getSellerProductById,
-  getSellerOrders
+  getSellerOrders,
+  getSellerOrderById,
+  updateSellerOrderStatus
 };

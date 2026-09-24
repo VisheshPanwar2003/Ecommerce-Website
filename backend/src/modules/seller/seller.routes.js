@@ -3,8 +3,15 @@ import {
   getDashboardData,
   getSellerProducts,
   getSellerProductById,
-  getSellerOrders
+  getSellerOrders,
+  getSellerOrderById,
+  updateSellerOrderStatus
 } from './seller.controller.js';
+import {
+  orderIdParamSchema,
+  updateOrderStatusSchema
+} from './seller.validation.js';
+import validate from '../../middleware/validate.middleware.js';
 import authenticate from '../../middleware/auth.middleware.js';
 import { requireRole } from '../../middleware/role.middleware.js';
 
@@ -23,5 +30,7 @@ router.get('/products/:id', getSellerProductById);
 
 // Seller orders
 router.get('/orders', getSellerOrders);
+router.get('/orders/:id', validate(orderIdParamSchema), getSellerOrderById);
+router.patch('/orders/:id/status', validate(updateOrderStatusSchema), updateSellerOrderStatus);
 
 export default router;

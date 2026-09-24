@@ -57,6 +57,16 @@ export const getSellerOrders = async (params = {}) => {
   return response.data?.data?.orders || [];
 };
 
+export const getSellerOrder = async (id) => {
+  const response = await api.get(`/seller/orders/${id}`);
+  return response.data?.data?.order || null;
+};
+
+export const updateSellerOrderStatus = async (id, status) => {
+  const response = await api.patch(`/seller/orders/${id}/status`, { status });
+  return response.data?.data?.order || null;
+};
+
 export const getSellerInventory = async () => {
   const response = await api.get('/inventory');
   return response.data?.data?.inventory || [];
@@ -80,6 +90,8 @@ export default {
   createProductImage,
   deleteProductImage,
   getSellerOrders,
+  getSellerOrder,
+  updateSellerOrderStatus,
   getSellerInventory,
   createInventoryMovement
 };

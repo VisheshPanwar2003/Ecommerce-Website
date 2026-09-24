@@ -11,6 +11,8 @@ import SellerDashboardPage from './pages/seller/SellerDashboardPage.jsx';
 import SellerProductsPage from './pages/seller/SellerProductsPage.jsx';
 import SellerProductFormPage from './pages/seller/SellerProductFormPage.jsx';
 import SellerInventoryPage from './pages/seller/SellerInventoryPage.jsx';
+import SellerOrdersPage from './pages/seller/SellerOrdersPage.jsx';
+import SellerOrderDetailPage from './pages/seller/SellerOrderDetailPage.jsx';
 
 function App() {
   return (
@@ -68,6 +70,22 @@ function App() {
                   element={
                     <ProtectedRoute allowedRoles={['SELLER', 'ADMIN']}>
                       <SellerInventoryPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/seller/orders"
+                  element={
+                    <ProtectedRoute allowedRoles={['SELLER', 'ADMIN']}>
+                      <SellerOrdersPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/seller/orders/:id"
+                  element={
+                    <ProtectedRoute allowedRoles={['SELLER', 'ADMIN']}>
+                      <SellerOrderDetailPage />
                     </ProtectedRoute>
                   }
                 />

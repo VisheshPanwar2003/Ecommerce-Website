@@ -201,29 +201,171 @@ export class SellerService {
   }
 
   /**
-   * Get seller's orders only (strictly scoped to items belonging to this seller)
+   * Allowed state transition map for order fulfillment
+   */
+  static ALLOWED_TRANSITIONS = {
+    PENDING: ['CONFIRMED', 'CANCELLED'],
+    CONFIRMED: ['PROCESSING', 'CANCELLED'],
+    PROCESSING: ['SHIPPED', 'CANCELLED'],
+    SHIPPED: ['DELIVERED'],
+    DELIVERED: [],
+    CANCELLED: []
+  };
+
+  /**
+   * Get seller's orders list (scoped to orders containing items belonging to this seller)
    */
   async getOrders(user, queryParams = {}) {
     const seller = await this.resolveSeller(user, queryParams.sellerId);
-    const orderItems = await sellerRepository.findSellerOrderItems(seller.id, 100);
+    const orders = await sellerRepository.findSellerOrders(seller.id);
 
-    return orderItems.map((item) => ({
-      id: item.id,
-      orderId: item.orderId,
-      productId: item.productId,
-      productName: item.productName,
-      variantName: item.variantName || null,
-      sku: item.sku,
-      quantity: item.quantity,
-      unitPrice: Number(item.unitPrice),
-      amount: Number(item.total),
-      orderStatus: item.order?.orderStatus || 'PENDING',
-      paymentStatus: item.order?.paymentStatus || 'PENDING',
-      location: item.order?.shippingCity
-        ? `${item.order.shippingCity}, ${item.order.shippingState}`
-        : null,
-      createdAt: item.order?.createdAt || item.createdAt
-    }));
+    return orders.map((order) => {
+      const sellerItems = (order.items || []).filter((item) => item.sellerId === seller.id);
+      const otherItems = (order.items || []).filter((item) => item.sellerId !== seller.id);
+      const isMultiVendor = otherItems.length > 0;
+
+      const sellerSubtotal = sellerItems.reduce((sum, item) => sum + Number(item.total || 0), 0);
+      const totalQuantity = sellerItems.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+
+      return {
+        id: order.id,
+        orderId: order.id,
+        orderStatus: order.orderStatus,
+        status: order.orderStatus,
+        paymentStatus: order.paymentStatus,
+        isMultiVendor,
+        canFulfill: !isMultiVendor,
+        totalQuantity,
+        sellerSubtotal: Number(sellerSubtotal.toFixed(2)),
+        location: order.shippingCity ? `${order.shippingCity}, ${order.shippingState}` : null,
+        shippingCity: order.shippingCity,
+        shippingState: order.shippingState,
+        customerName: order.shippingFullName,
+        createdAt: order.createdAt,
+        updatedAt: order.updatedAt,
+        items: sellerItems.map((item) => ({
+          id: item.id,
+          productId: item.productId,
+          variantId: item.variantId,
+          productName: item.productName,
+          sku: item.sku,
+          variantName: item.variantName || null,
+          quantity: item.quantity,
+          unitPrice: Number(item.unitPrice),
+          discount: Number(item.discount || 0),
+          total: Number(item.total)
+        }))
+      };
+    });
+  }
+
+  /**
+   * Get single order detail belonging to the seller
+   */
+  async getOrderById(user, orderId) {
+    const seller = await this.resolveSeller(user);
+    const order = await sellerRepository.findOrderWithAllItems(orderId);
+    if (!order) {
+      throw new AppError('Order not found', 404);
+    }
+
+    // Check that this order contains items belonging to this seller
+    const sellerItems = (order.items || []).filter((item) => item.sellerId === seller.id);
+    if (sellerItems.length === 0) {
+      throw new AppError('Forbidden: You do not have permission to access this order', 403);
+    }
+
+    const otherItems = (order.items || []).filter((item) => item.sellerId !== seller.id);
+    const isMultiVendor = otherItems.length > 0;
+    const sellerSubtotal = sellerItems.reduce((sum, item) => sum + Number(item.total || 0), 0);
+    const totalQuantity = sellerItems.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+
+    const allowedTransitions = isMultiVendor
+      ? []
+      : SellerService.ALLOWED_TRANSITIONS[order.orderStatus] || [];
+
+    return {
+      id: order.id,
+      orderId: order.id,
+      orderStatus: order.orderStatus,
+      status: order.orderStatus,
+      paymentStatus: order.paymentStatus,
+      isMultiVendor,
+      canFulfill: !isMultiVendor,
+      totalQuantity,
+      sellerSubtotal: Number(sellerSubtotal.toFixed(2)),
+      allowedTransitions,
+      shippingAddress: {
+        fullName: order.shippingFullName,
+        phone: order.shippingPhone,
+        addressLine: order.shippingAddressLine,
+        city: order.shippingCity,
+        state: order.shippingState,
+        postalCode: order.shippingPostalCode,
+        country: order.shippingCountry
+      },
+      items: sellerItems.map((item) => ({
+        id: item.id,
+        productId: item.productId,
+        variantId: item.variantId,
+        productName: item.productName,
+        sku: item.sku,
+        variantName: item.variantName || null,
+        quantity: item.quantity,
+        unitPrice: Number(item.unitPrice),
+        discount: Number(item.discount || 0),
+        total: Number(item.total)
+      })),
+      createdAt: order.createdAt,
+      updatedAt: order.updatedAt
+    };
+  }
+
+  /**
+   * Update order status with strict ownership and state transition validation
+   */
+  async updateOrderStatus(user, orderId, newStatus) {
+    const seller = await this.resolveSeller(user);
+    const order = await sellerRepository.findOrderWithAllItems(orderId);
+    if (!order) {
+      throw new AppError('Order not found', 404);
+    }
+
+    // Ownership check: seller must have items in this order
+    const sellerItems = (order.items || []).filter((item) => item.sellerId === seller.id);
+    if (sellerItems.length === 0) {
+      throw new AppError('Forbidden: You do not have permission to manage this order', 403);
+    }
+
+    // Multi-vendor check: In a multi-vendor order, individual sellers cannot mutate shared order status
+    const isMultiVendor = (order.items || []).some((item) => item.sellerId !== seller.id);
+    if (isMultiVendor) {
+      throw new AppError(
+        'Cannot modify multi-vendor order status: This order contains items from multiple merchants. Global status cannot be modified by an individual seller.',
+        403
+      );
+    }
+
+    if (order.orderStatus === newStatus) {
+      return this.getOrderById(user, orderId);
+    }
+
+    // Validate state transition
+    const allowed = SellerService.ALLOWED_TRANSITIONS[order.orderStatus] || [];
+    if (!allowed.includes(newStatus)) {
+      throw new AppError(
+        `Invalid status transition from ${order.orderStatus} to ${newStatus}`,
+        400
+      );
+    }
+
+    if (newStatus === 'CANCELLED') {
+      await sellerRepository.cancelOrderWithInventoryRestoration(order);
+    } else {
+      await sellerRepository.updateOrderStatus(order.id, newStatus);
+    }
+
+    return this.getOrderById(user, orderId);
   }
 
   /**
